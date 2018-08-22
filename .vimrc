@@ -2,7 +2,6 @@ set nocompatible
 
 call plug#begin('~/.vim/plugged')
  
-Plug 'altercation/vim-colors-solarized'
 Plug 'airblade/vim-gitgutter'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
@@ -10,9 +9,13 @@ Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'dracula/vim'
-Plug 'reasonml-editor/vim-reason-plus'
-Plug 'tpope/vim-fugitive'
 Plug 'leafgarland/typescript-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
+Plug 'Raimondi/delimitMate'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+Plug 'ervandew/supertab'
 
 call plug#end()
 
@@ -29,7 +32,9 @@ hi CursorLine cterm=NONE ctermbg=black ctermfg=white guibg=black ctermfg=white
 inoremap jj <Esc>
 
 " Searching
+set nohlsearch
 set ignorecase
+set incsearch
 
 " Tab settings
 set tabstop=2
@@ -62,8 +67,16 @@ command! -nargs=1 Search call SearchQuery(<q-args>)
 " vim-javascript
 let g:javascript_plugin_jsdoc = 1
 
+" DelimitMate
+let delimitMate_expand_cr = 1
+let delimitMate_expand_space = 1
+
 " vim-jsx
 let g:jsx_ext_required = 0
+
+" -- FZF --
+nnoremap <Leader>ff :Files<Cr>
+nnoremap <Leader>fb :Buffers<Cr>
 
 " ale
 let g:ale_sign_error = '✗'
@@ -73,10 +86,14 @@ let g:ale_echo_msg_error_str = '✗ Error'
 let g:ale_echo_msg_format = '[%linter% %severity%] %s'
 let g:ale_completion_enabled = 1
 
-" ReasonML language support
-let g:LanguageClient_serverCommands = {
-    \ 'reason': ['ocaml-language-server', '--stdio'],
-    \ 'ocaml': ['ocaml-language-server', '--stdio'],
-    \ }
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\   'jsx': ['eslint'],
+\   'css': ['stylelint'],
+\}
 
-let g:LanguageClient_autoStart = 1
+let g:ale_pattern_options = {
+\ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
+\ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
+\ '\.pcss$': {'ale_linters': ['stylelint'], 'ale_fixers': ['stylelint']},
+\}
